@@ -1,0 +1,9 @@
+This skill combines two works.
+
+1. Research pipeline (SKILL.md body outside the WBS layer, agents/, references/, templates/, examples/):
+   Based on Academic Research Skills by Cheng-I Wu, https://github.com/imbad0202/academic-research-skills
+   Licensed under CC BY-NC 4.0 (https://creativecommons.org/licenses/by-nc/4.0/). Changes: added the WBS layer,
+   edited the frontmatter and one routing row. Use is limited to non-commercial purposes under that license.
+
+2. WBS layer (wbs/ directory and the WBS section in SKILL.md): written for a Warwick Business School student from
+   lecture materials of module IB1450. It carries the same non-commercial intent.

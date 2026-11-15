@@ -25,6 +25,12 @@ cfa-local/
 
 El progreso se guarda en `localStorage` del navegador. Exporta una copia desde Ajustes.
 
+## Contenido incluido
+
+200 preguntas originales de tres opciones repartidas por tema según los pesos públicos del examen (ética 24, cuantitativos 24, estados financieros 24, renta variable 24, renta fija 24, portafolios 20, economía 15, finanzas corporativas 15, derivados 15, alternativas 15), más 120 tarjetas, resúmenes y fórmulas por tema. Las respuestas numéricas se calcularon con Python y 22 de ellas se verificaron de forma independiente.
+
+Para validar el banco después de editarlo: `node tools/validar-contenido.js`.
+
 ## Sobre el contenido
 
 Todo el material de estudio es original y sigue la estructura pública del examen (temas, pesos, formato). No es material oficial del CFA Institute, no reproduce su currículo ni sus preguntas, y puede contener errores. Para el examen real usa el currículo oficial que incluye tu inscripción. No existe una nota mínima oficial publicada, por eso la referencia de 70 % de la app es orientativa.

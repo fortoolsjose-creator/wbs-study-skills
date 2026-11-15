@@ -345,8 +345,8 @@
   function viewExam() {
     var ex = ui.exam;
     if (ex.between) {
-      return '<h1>Simulador</h1><div class="card"><h2 style="margin-top:0">Sesión ' + ex.s + ' terminada</h2><p>El examen real incluye un descanso opcional entre sesiones. Cuando estés listo, empieza la sesión ' + (ex.s + 1) + '.</p>' +
-        '<button class="btn" data-act="exam-next-session">Empezar sesión ' + (ex.s + 1) + '</button></div>';
+      return '<h1>Simulador</h1><div class="card"><h2 style="margin-top:0">Sesión ' + (ex.s + 1) + ' terminada</h2><p>El examen real incluye un descanso opcional entre sesiones. Cuando estés listo, empieza la sesión ' + (ex.s + 2) + '.</p>' +
+        '<button class="btn" data-act="exam-next-session">Empezar sesión ' + (ex.s + 2) + '</button></div>';
     }
     var ses = ex.sessions[ex.s], q = ses.qs[ex.i], key = ex.s + ':' + ex.i, picked = ex.answers[key];
     var grid = ses.qs.map(function (_, i) {

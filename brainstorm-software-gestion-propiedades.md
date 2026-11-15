@@ -1,10 +1,23 @@
 # Brainstorm: software de gestión de propiedades en renta
 
-Notas mías para pensar el producto completo antes de construir nada. Escribo todo en abierto: ideas, dudas y decisiones pendientes. Donde no estoy seguro de algo lo marco como "por validar".
+Notas mías para pensar el producto completo antes de construir nada. Escribo todo en abierto: ideas, dudas y decisiones pendientes.
+
+**Cómo marco la confianza de cada dato** (así sé después qué puedo dar por firme y qué tengo que comprobar):
+
+| Etiqueta | Significado |
+|---|---|
+| **[visto]** | Lo leí en documentación pública de un producto del mercado que estudié (sitio, centro de ayuda, documentación de su API) |
+| **[tercero]** | Lo dice un sitio externo y no pude contrastarlo con la fuente oficial |
+| **[supuesto]** | Lo deduzco yo. Es una hipótesis razonable que debo validar |
+| **[vacío]** | No logré confirmarlo con lo público |
+
+Cada sección abre con una línea de confianza general. Dentro de las secciones marco los datos que se salen de ese nivel.
 
 ---
 
 ## 0. Punto de partida
+
+*Confianza: [supuesto] La conclusión es mía.*
 
 Quiero entender bien qué hace un software de este tipo, cómo lo hace y por qué se diseña así. Después viene la parte de construir.
 
@@ -13,6 +26,8 @@ Mi primera conclusión: esto es un sistema contable con ropa de herramienta de g
 ---
 
 ## 1. Para quién lo haría
+
+*Confianza: [visto] los tres tipos de cliente aparecen en la oferta del mercado (residencial, comercial, asociaciones). [supuesto] el orden de arranque.*
 
 Tres tipos de cliente, y cada uno estira el producto en una dirección distinta:
 
@@ -25,6 +40,8 @@ Duda: ¿arranco con el tipo 1 y 2, que comparten el 80 % del producto, y dejo el
 ---
 
 ## 2. El ciclo de vida de una unidad
+
+*Confianza: [visto] los pasos de aplicación, screening, contrato y conversión de prospecto a inquilino. [supuesto] el resto de la secuencia y el modelo de persona única como decisión de diseño.*
 
 Este es el hilo que une todos los módulos. Lo dibujo como una secuencia:
 
@@ -47,6 +64,8 @@ Idea que me gusta: tener un solo registro de persona con un campo `type` (prospe
 
 ## 3. Mapa de módulos
 
+*Confianza: [visto] Lista tomada de los menús y páginas públicas del producto.*
+
 **Financieros:** cobro de renta, contabilidad de partida doble, sincronización bancaria, reportes, exportación o sync con un programa contable externo.
 
 **Arrendamiento:** listados y sindicación, sitio web de propiedades, CRM de prospectos, aplicaciones, screening, firma electrónica, seguro de inquilinos.
@@ -58,6 +77,8 @@ Idea que me gusta: tener un solo registro de persona con un campo `type` (prospe
 ---
 
 ## 4. Modelo de datos
+
+*Confianza: [visto] entidades, campos y relaciones (salen de la documentación de una API REST pública). [supuesto] los motivos de cada decisión de diseño.*
 
 Borrador de entidades. Cada una lleva su relación principal:
 
@@ -91,11 +112,35 @@ Decisiones de diseño que quiero tomar desde el día uno:
 - **Saldos precalculados** en lease y unidad (saldo adeudado, depósitos retenidos). Las listas cargan rápido sin recorrer el libro.
 - **Correcciones por reversa.** Si un pago se devuelve o se corrige, se crea una transacción nueva y el historial queda intacto.
 
-Convenciones de API que me parecen sensatas: token Bearer, paginación con `page_number` y `page_size` (50 por defecto, máximo 1000), filtros con prefijo `filter_` (`filter_property`, `filter_date_from`), reportes con filtro de método contable (efectivo o devengado).
+Convenciones de API que me parecen sensatas: token Bearer, paginación con `page_number` y `page_size` (50 por defecto, máximo 1000), filtros con prefijo `filter_` (`filter_property`, `filter_date_from`), reportes con filtro de método contable (efectivo o devengado). [visto]
+
+**Rutas de recurso que aparecen en esa documentación** [visto]:
+
+| Grupo | Rutas |
+|---|---|
+| Contabilidad | `/accounts`, `/expenses`, `/vendor-bills`, `/vendor-credits` |
+| Propiedades | `/properties`, `/property-groups` (portafolios), `/units` |
+| Leases | `/leases`, `/leases/tenants`, `/lease-charges`, `/lease-credits`, `/lease-payments`, `/lease-reversed-payments` |
+| Personas | `/tenants`, `/owners`, `/vendors`, `/users` y `/users/me` |
+| Operación | `/tasks`, `/notes`, `/files`, `/communications` |
+| Reportes | `/reports/profit-and-loss-summary`, `/reports/balance-sheet-summary`, `/reports/cash-flow-statement`, `/reports/rent-roll` |
+
+Detalles de contrato:
+
+- `Person.type`: `LEASE_TENANT` o `PROSPECT_TENANT`.
+- `Task.type`: `INTERNAL_TASK`, `TENANT_REQUEST`, `OWNER_REQUEST`, `WORK_ORDER`.
+- Una nota puede vincularse a: tenant, owner, vendor, property, unit, lease, borrador de lease, task, solicitud de aplicación.
+- Un archivo admite además: factura, pago de factura, crédito de proveedor, nota, póliza de seguro, comunicación.
+- Una unidad expone también `rentPerSize`, `totalRecurringCharges`, `totalRecurringCredits`, `totalRecurringPayments`, `lastPaymentDate` y `lastReturnedPaymentDate`.
+- Un `Owner` guarda dirección y nombre de contribuyente para 1099, con opción de dirección fiscal distinta de la principal.
+- Un `Vendor` guarda vencimiento de póliza de seguro y saldo abierto.
+- [vacío] No encontré límites de tasa ni webhooks documentados.
 
 ---
 
 ## 5. El libro del lease: cargo, pago y depósito
+
+*Confianza: [visto] tipos de transacción, regla de asignación, estados de pago. [supuesto] los motivos. [vacío] reglas de mora y cuotas por pago devuelto.*
 
 Tres transacciones básicas:
 
@@ -126,6 +171,8 @@ Además un indicador `returned` y pagos reversados. Los estados reflejan algo co
 
 ## 6. Cobro de renta
 
+*Confianza: [visto] funciones y métricas del dashboard. [supuesto] la observación final sobre autopago y motor de ingresos.*
+
 Piezas que quiero:
 
 - Tarjeta, débito y ACH. Efectivo en puntos de pago y registro manual de cheques.
@@ -149,6 +196,8 @@ Observación importante: cada métrica del dashboard lleva a una acción que emp
 
 ## 7. Contabilidad
 
+*Confianza: [visto] capacidades, auditoría y fórmulas de CAM. [supuesto] los porqués.*
+
 - Partida doble con plan de cuentas editable.
 - Saldos de apertura, transferencias bancarias, activos fijos y pasivos, presupuestos por propiedad.
 - Cuentas por cobrar y por pagar, con aging.
@@ -156,7 +205,17 @@ Observación importante: cada métrica del dashboard lleva a una acción que emp
 - Soporte de varias entidades (LLC, portafolios) dentro de una misma cuenta.
 - **Sincronización bancaria y conciliación** en pocos clics.
 - Sync con un programa contable externo para evitar doble captura.
-- Reportes: P&L, balance general, flujo de efectivo, rent roll, lista de transacciones, estado de cuenta del lease, mora, comisiones, owner statement, aging de cuentas por pagar, seguros, pagos recurrentes, registro de cheques, transacciones por proveedor, recibos de efectivo, y más.
+- Catálogo de reportes que veo en el mercado [visto]:
+
+| Familia | Reportes |
+|---|---|
+| Estados financieros | P&L, balance general, flujo de efectivo |
+| Inquilinos y leases | Rent roll, estado de cuenta del lease, mora por lease, rentas pagadas, pagos recurrentes y autopago, cargos y créditos recurrentes de renta, reportes de inquilinos, cumplimiento de seguros |
+| Dinero entrante | Cobros electrónicos, fondos no depositados, resumen y detalle de depósitos, recibos de efectivo |
+| Dinero saliente | Aging de cuentas por pagar (detalle y resumen), registro de cheques, transacciones por proveedor |
+| Propietarios | Owner statement, comisiones de administración, ownership de propiedades |
+| Control | Lista de transacciones, detalle de transacciones, bitácora de auditoría, reconciliación CAM |
+| Vivienda asequible | Reportes de programa Sección 8, con reconciliación HAP y morosidad |
 - Método contable seleccionable en cada reporte: efectivo o devengado.
 
 **Registro de auditoría.** Me parece indispensable desde el inicio:
@@ -190,6 +249,8 @@ Esto en hojas de cálculo toma horas. Lo dejo para una fase posterior.
 
 ## 8. Arrendamiento
 
+*Confianza: [visto] flujo de aplicación, screening y dos fases. [supuesto] la lección sobre cumplimiento. [vacío] detalles de cuotas y estados de aplicación.*
+
 **Listados.** Publicación de unidades vacantes con sindicación a portales (Zillow, Trulia, HotPads y otros). Las consultas que llegan de esos portales se enrutan a la bandeja de comunicación. Un enlace de aplicación por propiedad, con cuotas, preguntas y requisitos propios.
 
 **Showings.** Disponibilidad por agente, ajustes por defecto, autoagendamiento del prospecto, seguimiento.
@@ -213,6 +274,8 @@ El proveedor lo aplica solo donde corresponde. La lección para mí: el cumplimi
 
 ## 9. Comunicación y portales
 
+*Confianza: [visto] capacidades de portales y centro de comunicación. [vacío] reglas de consentimiento y opt-in de SMS, y cómo se enruta la IA.*
+
 **Portal del inquilino.** Pagar renta, ver historial, subir comprobante de seguro, enviar solicitudes con fotos, leer anuncios. Invitación al crear el lease, después, o en lote. El inquilino recibe un correo para crear su contraseña. Opcional: asistente de IA 24/7 que responde preguntas y arma solicitudes de mantenimiento completas.
 
 **Portal del propietario.** Reportes instantáneos, tableros en tiempo real, estatus de solicitudes, archivos compartidos con permisos. Las contribuciones se pagan desde aquí.
@@ -224,6 +287,8 @@ El proveedor lo aplica solo donde corresponde. La lección para mí: el cumplimi
 ---
 
 ## 10. Mantenimiento
+
+*Confianza: [visto] campos de la orden de trabajo. [supuesto] la cadena orden, factura, gasto y statement.*
 
 Todo vive en `Task`:
 
@@ -238,6 +303,8 @@ Cierra el círculo financiero: la orden de trabajo termina en una factura del pr
 ---
 
 ## 11. El dinero del propietario
+
+*Confianza: [visto] mecánica de fees, distribuciones, contribuciones y statement. [supuesto] los motivos, la secuencia del cierre mensual (la armé yo a partir de las reglas vistas) y las mejoras que propongo.*
 
 La parte que más me interesa entender, porque aquí se juega la confianza del cliente.
 
@@ -346,6 +413,8 @@ Cada paso depende del anterior. Si salto los pasos 1 a 3, las fees salen con bas
 
 ## 12. Workflows y automatizaciones
 
+*Confianza: [visto] modelo, acciones y plantillas. [supuesto] la implementación interna. [vacío] el nivel avanzado (condiciones, ramas).*
+
 **Modelo mental:**
 
 | Término | Significado |
@@ -375,6 +444,8 @@ Implementación que imagino: máquina de estados con cola de trabajos diferidos.
 
 ## 13. Agentes de IA
 
+*Confianza: [visto] qué agentes se ofrecen y la afirmación de que resuelven hasta el 80 % de solicitudes (es dato de marketing). [vacío] cómo funcionan por dentro.*
+
 Ideas para la capa de IA, organizadas por nivel de riesgo:
 
 1. **Asistente** (riesgo bajo): responde preguntas, procesa facturas, arma reportes.
@@ -398,7 +469,13 @@ Preguntas abiertas: qué modelo usar, qué datos consulta cada agente, cuándo t
 
 ## 14. Permisos y roles
 
+*Confianza: [visto] estructura de roles y permisos. [supuesto] los motivos y el alcance por propiedad.*
+
 **Roles de fábrica que pondría:** acceso total, contador, equipo de mantenimiento, agente de arrendamiento y propietario. Además un rol de administrador de propiedades, que me parece un hueco evidente en el mercado.
+
+Nota de calidad [visto]: la documentación del mercado enumera cinco roles de fábrica en un párrafo y habla de cuatro en otro. Tomo eso como señal de que el catálogo de roles cambió con el tiempo. En ese mercado tampoco existe un rol de administrador de propiedades de fábrica y su guía recomienda crearlo a mano o usar el de acceso total, que abre todo. Además hay una guía para recrear roles estándar copiando permisos de otra cuenta, porque a veces desaparecen.
+
+Gestión de usuarios que veo cubierta [visto]: alta, edición, desactivar, reenviar invitación, cambiar correo, notificaciones por usuario, push en móvil, perfil propio, permiso para que un propietario solicite una cuenta de comerciante, control y diagnóstico del acceso a cuentas bancarias.
 
 **Estructura de un rol:** cuatro pestañas.
 
@@ -439,6 +516,29 @@ Decisiones que tomo:
 ---
 
 ## 15. Arquitectura técnica (mi hipótesis)
+
+*Confianza: [supuesto] casi todo. La tabla de pistas separa lo que es [visto] de lo que deduzco.*
+
+**Pistas públicas que sustentan la hipótesis:**
+
+| Pista | Nivel | Qué me sugiere |
+|---|---|---|
+| API REST con token Bearer, paginación por `page_number` y `page_size`, filtros `filter_*` | [visto] | Backend con API propia, y el frontend probablemente la usa también |
+| Vínculos polimórficos (`resourceType` + `resourceId`) en notas y archivos | [visto] | Esquema flexible con referencias entre objetos |
+| Transacciones con líneas, lote (`batch`) y fecha de creación | [visto] | Libro contable por lotes con líneas |
+| Auditoría con valor viejo y nuevo por campo, IP y user agent | [visto] | Registro de eventos de cambio en cada escritura |
+| Distingue acciones de llaves de API, impersonación y acceso técnico en la auditoría | [visto] | Herramientas internas de soporte con trazabilidad |
+| Procesador de pagos externo, servicio de cheques electrónicos, proveedor de screening, sync con programa contable | [visto] | Arquitectura de integraciones, con cero datos de tarjeta en mi base |
+| Estados Processing, Succeeded, Deposited, Failed, Disputed | [visto] | Pagos asíncronos movidos por webhooks del procesador |
+| Respaldos cada cinco minutos en servidores geo-redundantes, cifrado de 256 bits, PCI, 2FA, SSO con Google | [visto] | Base replicada con respaldo continuo y seguridad estándar |
+| Apps iOS y Android con notificaciones push | [visto] | Clientes móviles sobre la misma API |
+| API abierta e integración con Zapier | [visto] | Integraciones de cara al cliente |
+| "Advanced A/P and A/R" entre portafolios, LLC y entidades | [visto] | Multi-entidad contable dentro de una cuenta |
+| Asistente de fees que oculta propiedades ya facturadas | [visto] | Control de duplicados a nivel de aplicación |
+| Sitio de marketing, ayuda y videos alojados en plataformas SaaS aparte | [visto] en el código de las páginas | Producto y comunicación separados |
+| Cola de trabajos con reintentos idempotentes y programador | [supuesto] | Hace falta para cargos recurrentes, mora y workflows |
+| Saldos denormalizados en lease y unidad | [supuesto] | Los campos `totalBalanceDue` y similares lo insinúan |
+| Base de datos y lenguajes concretos | [vacío] | No hay forma de saberlo con lo público |
 
 Lo que pienso construir, con las piezas que el producto exige:
 
@@ -483,6 +583,8 @@ Marketing, ayuda y videos los dejaría en plataformas SaaS aparte del producto.
 
 ## 16. Pricing
 
+*Confianza: [visto] precios y funciones de la página oficial. [tercero] mínimos y planes anteriores. [supuesto] la lectura estratégica.*
+
 Miré cómo se cobra en el mercado para formarme una idea. El patrón que veo:
 
 **Estructura por escalones de automatización.** Todo el producto está en todos los planes. Lo que cambia es cuánto trabajo hace la IA.
@@ -517,6 +619,16 @@ Hay mínimos de gasto y de unidades. Un sitio de reseñas habla de unos $199 al 
 4. Usuarios, almacenamiento y API ilimitados quitan razones para no adoptar y concentran el cobro en la unidad.
 5. Los cobros por transacción (screening, pagos, seguro) crecen con el uso.
 6. Un escalón superior por invitación protege la calidad de los agentes de mayor riesgo.
+
+**Matices y dudas que conviene tener a la vista:**
+
+- **Origen de los números.** Los precios de partida salen de la página oficial [visto]. Los mínimos ($199 al mes en el escalón base, equivalente a $19,90 por unidad con 10 unidades, y $3,00 y $1,80 por unidad en facturación mensual) salen de un sitio de reseñas [tercero]. Los trataría como orientativos hasta verlos en una cotización.
+- **Esquema anterior.** Según un tercero, hasta septiembre de 2026 el mercado vendía tres planes (básico, pro y premium) con 10 unidades a $69, $149 y $209 al mes en anual, o $99, $189 y $239 en mensual. Se habrían retirado alrededor de octubre de 2026 [tercero]. La página oficial incluye una pregunta sobre qué pasó con esos planes y no pude leer la respuesta [vacío].
+- **Tabla de comparación ambigua.** La fila de ACH entrante muestra seis valores ($1,50, gratis, gratis, $1,50, gratis, gratis) en tres columnas, sin que quede claro a qué corresponde cada uno. La lista de características dice "ACH entrante gratis" en el escalón intermedio. Por eso escribí que cuesta cerca de $1,50 en el base y es gratis en el intermedio, con la reserva de que la tabla no lo deja limpio [visto con duda].
+- **Créditos de mensajería.** La tabla muestra 5, 10 y 20, repetidos dos veces, sin unidad ni periodo [vacío].
+- **Screening.** El valor $35 aparece en todas las columnas [visto].
+- **Dos agentes de IA aparecen solo en el escalón superior** (mantenimiento y renovaciones). La recepcionista aparece desde el intermedio, y el asistente de IA básico viene en el base. El asistente dentro del portal del inquilino figura como complemento aparte [visto].
+- **Respuestas del FAQ de la página** (qué plan elegir, qué pasa si un agente hace algo indeseado, si el precio cambia para clientes actuales) no las pude leer [vacío].
 
 Mi decisión pendiente: arrancar con un solo plan por unidad con mínimo bajo, y sumar el escalón de IA cuando los agentes estén probados.
 
@@ -553,3 +665,17 @@ Tres cosas, en este orden:
 1. Cerrar las preguntas abiertas de mora y alcance por propiedad.
 2. Bocetar el esquema de base de datos del MVP: propiedades, unidades, personas, leases, cargos, pagos, cuentas y libro.
 3. Definir el MVP: cobro de renta con autopago, libro contable, pantalla de cierre mensual y statement para el propietario.
+
+---
+
+## 20. Resumen: qué es hecho y qué es hipótesis
+
+| Tema | Lo que doy por firme [visto] | Lo que supongo [supuesto] | Lo que me falta [vacío] |
+|---|---|---|---|
+| Libro del lease | Cargo, pago, depósito, asignación por antigüedad o prioridad, estados de pago | Por qué se separan pago y depósito | Mora y pagos devueltos |
+| Dinero del propietario | Tipos de fee, categorías retenidas, asistente de distribución, efectivo distribuible, statement | Orden del cierre mensual como lista de verificación | Distribución de reservas y cómo se fijan |
+| Workflows | Trigger, pasos, acciones, plantillas, actividad | Máquina de estados con cola diferida | Condiciones y ramas |
+| IA | Agentes ofrecidos y su alcance de marketing | Principios de supervisión y registro | Funcionamiento interno |
+| Permisos | Matriz por objeto y acción, roles de fábrica, pestañas | Alcance por propiedad en el modelo de datos | Matriz completa de cada rol de fábrica |
+| Arquitectura | Pistas de la tabla de la sección 15 | Cola de trabajos, saldos denormalizados | Stack concreto |
+| Pricing | Escalones y funciones de la página oficial | Lectura estratégica | Mínimos oficiales, columnas ambiguas, FAQ |

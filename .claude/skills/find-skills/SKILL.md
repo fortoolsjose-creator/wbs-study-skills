@@ -18,6 +18,12 @@ Use this skill when the user:
 - Wants to search for tools, templates, or workflows
 - Mentions they wish they had help with a specific domain (design, testing, deployment, etc.)
 
+> **Claude Code on the web (cloud sessions):** the CLI uses Node's built-in fetch,
+> which ignores the sandbox proxy. Prefix every `npx skills` command with
+> `NODE_USE_ENV_PROXY=1` (e.g. `NODE_USE_ENV_PROXY=1 npx -y skills find legal`).
+> The host `skills.sh` must be in the environment's allowed hosts. Without both,
+> searches silently return "No skills found".
+
 ## What is the Skills CLI?
 
 The Skills CLI (`npx skills`) is the package manager for the open agent skills ecosystem. Skills are modular packages that extend agent capabilities with specialized knowledge, workflows, and tools.

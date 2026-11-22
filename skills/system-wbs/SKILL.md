@@ -1,8 +1,8 @@
 ---
 name: system-wbs
-description: "Working method for Warwick Business School (WBS) coursework. It sets the order of work and names which skill runs at which step: deep-research-wbs for sources and drafting, scientific-critical-thinking for evidence quality, critical-thinking-logical-reasoning for stress-testing the argument, no-ai-slop and then humanizer for the final edit, plus the checks and the AI use note at the end. Use it at the start of any WBS task (report paragraph, essay, annotated bibliography, inquiry note, presentation, peer feedback on another group's draft, study session), and whenever the student says system wbs, metodologia, WBS rules, IB1450, Deliverable, group assignment, peer feedback, or asks which skills to use and when. Spanish triggers: metodologia de trabajo, como trabajamos, usa todas las skills, reglas WBS, feedback a otro grupo, tarea de WBS."
+description: "Working method for Warwick Business School (WBS) coursework. It sets the order of work and names which skill runs at which step: deep-research-wbs for sources and drafting, scientific-critical-thinking for evidence quality, critical-thinking-logical-reasoning for stress-testing the argument, no-ai-slop and then humanizer for the final edit, plus the checks and the AI use note at the end. Use it at the start of any WBS task (report paragraph, essay, annotated bibliography, inquiry note, presentation, peer feedback on another group's draft, study session), and whenever the student says system wbs, metodologia, WBS rules, IB1450, Deliverable, group assignment, peer feedback, or asks which skills to use and when. Spanish triggers: metodologia de trabajo, como trabajamos, usa todas las skills, reglas WBS, feedback a otro grupo, tarea de WBS. Marketing tasks (strategy, positioning, pricing, brand, marketing plan, analytics, any marketing assignment) go to marketing-master-system-wbs."
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   status: active
   related_skills:
     - deep-research-wbs
@@ -13,11 +13,12 @@ metadata:
     - brainstorming
     - ux-writing
     - find-skills
+    - marketing-master-system-wbs
 ---
 
 # System WBS: the working method
 
-This skill is the playbook for any WBS task. It says what to do first, which skill to invoke at each step, what each step must produce, and what has to be true before moving on. The skills it coordinates are `deep-research-wbs`, `scientific-critical-thinking`, `critical-thinking-logical-reasoning`, `no-ai-slop` and `humanizer`. `pptx`, `brainstorming`, `ux-writing` and `find-skills` join when the task needs them.
+This skill is the playbook for any WBS task. It says what to do first, which skill to invoke at each step, what each step must produce, and what has to be true before moving on. The skills it coordinates are `deep-research-wbs`, `scientific-critical-thinking`, `critical-thinking-logical-reasoning`, `no-ai-slop` and `humanizer`. `pptx`, `brainstorming`, `ux-writing` and `find-skills` join when the task needs them. Marketing tasks go to `marketing-master-system-wbs`, which routes them to the installed marketing skills.
 
 ## Standing rules (every answer, every step)
 
@@ -43,7 +44,8 @@ This skill is the playbook for any WBS task. It says what to do first, which ski
 5. **Follow the answer.**
    - Yes: use the topic, keep it easy to cut (one sentence or one paragraph that stands alone), and record in the AI use note that the work went beyond the module with the student's permission.
    - No, or no reply: continue inside the module. Do not raise the same topic again in this task unless the student asks.
-6. **The rule covers every step.** It applies to the plan, the source search, the evidence, the drafting, the phrases and the peer feedback. Critical thinking on topics the module does cover needs no permission.
+6. **Marketing frameworks follow the same rule.** STP, SWOT, Ansoff, BCG, Blue Ocean, pricing methods, brand equity, conjoint and marketing mix models count as outside the module unless the module's materials teach them. `marketing-master-system-wbs` asks for permission with the template below before it uses one.
+7. **The rule covers every step.** It applies to the plan, the source search, the evidence, the drafting, the phrases and the peer feedback. Critical thinking on topics the module does cover needs no permission.
 
 Permission request template (write it in the language the student is using in chat):
 
@@ -85,6 +87,8 @@ PEER stands for Point (one idea in the first sentence), Explanation (why it hold
 4. Run `no-ai-slop` and `humanizer` on the feedback.
 5. Put the text in the student's own form layout.
 
+**Marketing task (strategy, positioning, pricing, brand, marketing plan, measurement).** Run steps 0 and 1, then hand the content work to `marketing-master-system-wbs`. It picks the phase, the lead skill and the supporting skills, and adds the textbook frameworks the installed skills lack. This skill keeps control of the scope rule, the evidence checks (steps 3 and 5), the clean-up (step 6), the final audit (step 7) and the AI use note (step 8). In step 2, take framework references from `marketing-master-system-wbs/references/sources.md` and raise each one to the verification level the brief expects. A framework from a skill counts as a tool and a source from the reference list counts as a citation.
+
 **Presentation or slides.** Step 1 with `brainstorming`, then `pptx` for the file. Run `no-ai-slop` on the slide text. Use `ux-writing` for short labels and button-style text.
 
 **Study session.** `deep-research-wbs` (`wbs/study-modes.md`): quiz, teach-back, explain. The brief's AI rule decides how much help is allowed.
@@ -97,6 +101,7 @@ PEER stands for Point (one idea in the first sentence), Explanation (why it hold
 - `no-ai-slop`: removes AI patterns and keeps the writer's voice. It runs before `humanizer`.
 - `humanizer`: a second pass that makes the text read like a person wrote it.
 - `brainstorming`: shapes a new structure or plan before building it.
+- `marketing-master-system-wbs`: the front door for marketing work. It routes a request through seven phases (diagnose, strategy, offer and price, plan and goals, execute, measure, operate) and names the lead skill for each.
 - `pptx` and `ux-writing`: slides and short interface-style copy.
 - `find-skills`: finds an installable skill when the task needs a capability this system lacks.
 

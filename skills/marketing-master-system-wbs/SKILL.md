@@ -1,6 +1,6 @@
 ---
-name: marketing-master
-description: "Master skill for marketing work. It routes any marketing request to the right installed skill in the right order (diagnose, strategy, offer and price, plan and goals, execute, measure, operate), says which skill leads when several overlap, and adds the textbook frameworks the installed skills lack (4Ps and 7Ps, Byron Sharp, Binet and Field, governance). Use for marketing strategy, STP, positioning, SWOT, Ansoff, BCG, Blue Ocean, brand architecture, brand equity, customer journey, pricing, conjoint, elasticity, customer research, market sizing, marketing plans, OKRs, content strategy, ads, launches, conversion optimisation, analytics, marketing mix modelling, RevOps, and any marketing assignment or report. Spanish triggers: marketing, estrategia de marketing, plan de marketing, posicionamiento, segmentacion, precios, marca, lanzamiento, investigacion de mercado, medicion de marketing."
+name: marketing-master-system-wbs
+description: "Master skill for marketing work. It routes any marketing request to the right installed skill in the right order (diagnose, strategy, offer and price, plan and goals, execute, measure, operate), says which skill leads when several overlap, and adds the textbook frameworks the installed skills lack (4Ps and 7Ps, Byron Sharp, Binet and Field, governance). Use for marketing strategy, STP, positioning, SWOT, Ansoff, BCG, Blue Ocean, brand architecture, brand equity, customer journey, pricing, conjoint, elasticity, customer research, market sizing, marketing plans, OKRs, content strategy, ads, launches, conversion optimisation, analytics, marketing mix modelling, RevOps, and any marketing assignment or report. Part of the system-wbs method: use it whenever system-wbs meets a marketing task. Spanish triggers: marketing, estrategia de marketing, plan de marketing, posicionamiento, segmentacion, precios, marca, lanzamiento, investigacion de mercado, medicion de marketing."
 metadata:
   version: "1.0.0"
   status: active
@@ -38,9 +38,9 @@ metadata:
     - revops-stack-rationalization
 ---
 
-# Marketing master
+# Marketing master (system-wbs)
 
-This skill is the front door for marketing work. It picks the phase, names the lead skill for that phase, runs the supporting skills in order, and fills the gaps the installed skills leave. It holds no frameworks of its own beyond the ones in `references/frameworks-gap.md`. The detail lives in the installed skills, and this skill decides which of them to open.
+This skill is the marketing branch of `system-wbs`. It is the front door for marketing work. It picks the phase, names the lead skill for that phase, runs the supporting skills in order, and fills the gaps the installed skills leave. It holds no frameworks of its own beyond the ones in `references/frameworks-gap.md`. The detail lives in the installed skills, and this skill decides which of them to open.
 
 ## Rules that apply to every marketing task
 

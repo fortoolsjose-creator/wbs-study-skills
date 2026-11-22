@@ -30,6 +30,12 @@ claude.ai: comprime la carpeta `deep-research-wbs` en un `.zip`, renómbralo a `
 
 Instalación en Claude Code: copia `skills/system-wbs` a `~/.claude/skills/`. En claude.ai, sube `system-wbs.skill` en Settings > Capabilities > Skills.
 
+## marketing-master-system-wbs: la rama de marketing
+
+`skills/marketing-master-system-wbs` es la skill master de marketing, enlazada a `system-wbs`. Recibe cualquier petición de marketing, elige la fase (diagnóstico, estrategia, oferta y precio, plan y metas, ejecución, medición, operación) y la skill líder de cada fase, y añade los marcos de libro de texto que las skills instaladas no traen (4Ps y 7Ps, Sharp, Binet y Field, gobernanza). Sus referencias incluyen un mapa de skills y una lista de fuentes con nivel de verificación.
+
+Depende de 29 skills de terceros que no están en este repo. La lista con su origen y commit está en `skills/marketing-master-system-wbs/references/skill-map.md`. Instalación en Claude Code: copia `skills/marketing-master-system-wbs` a `~/.claude/skills/`. En claude.ai, sube `marketing-master-system-wbs.skill`.
+
 ## Uso
 
 Escribe lo que necesitas con tus palabras, por ejemplo:

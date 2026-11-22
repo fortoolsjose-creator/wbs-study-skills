@@ -24,6 +24,12 @@ Instalación manual en Claude Code: copia la carpeta `skills/deep-research-wbs` 
 
 claude.ai: comprime la carpeta `deep-research-wbs` en un `.zip`, renómbralo a `.skill` y súbelo en Settings > Capabilities > Skills.
 
+## system-wbs: la metodología de trabajo
+
+`skills/system-wbs` es el playbook que ordena el trabajo en cualquier tarea de WBS. Dice qué skill se invoca en cada paso (`deep-research-wbs`, `scientific-critical-thinking`, `critical-thinking-logical-reasoning`, `no-ai-slop`, `humanizer`, más `pptx`, `brainstorming` y `ux-writing` cuando hacen falta), qué sale de cada paso y qué tiene que cumplirse antes de seguir. También trae el flujo para dar feedback a otro grupo y la nota de uso de IA con las skills realmente invocadas.
+
+Instalación en Claude Code: copia `skills/system-wbs` a `~/.claude/skills/`. En claude.ai, sube `system-wbs.skill` en Settings > Capabilities > Skills.
+
 ## Uso
 
 Escribe lo que necesitas con tus palabras, por ejemplo:

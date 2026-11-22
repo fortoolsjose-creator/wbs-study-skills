@@ -36,6 +36,17 @@ Instalación en Claude Code: copia `skills/system-wbs` a `~/.claude/skills/`. En
 
 Depende de 29 skills de terceros que no están en este repo. La lista con su origen y commit está en `skills/marketing-master-system-wbs/references/skill-map.md`. Instalación en Claude Code: copia `skills/marketing-master-system-wbs` a `~/.claude/skills/`. En claude.ai, sube `marketing-master-system-wbs.skill`.
 
+## Usar las skills en chats nuevos conectados a esta repo
+
+Claude Code carga las skills de proyecto desde `.claude/skills/`. Esta repo lo resuelve así:
+
+- `.claude/skills/system-wbs`, `.claude/skills/marketing-master-system-wbs` y `.claude/skills/deep-research-wbs` son enlaces simbólicos a `skills/`. Hay una sola copia de cada una.
+- `.claude/skills-manifest.tsv` lista 36 skills de terceros (las 29 de marketing que dependen de la master y las 7 que usa `system-wbs`: humanizer, no-ai-slop, scientific-critical-thinking, critical-thinking-logical-reasoning, brainstorming, find-skills y ux-writing). Cada fila fija el repo de origen y el commit revisado.
+- `.claude/hooks/session-start.sh`, registrado en `.claude/settings.json`, instala esas skills en `~/.claude/skills` al iniciar una sesión en la nube. Descarga solo la carpeta de cada skill en el commit fijado, omite la instalación si el manifiesto no cambió y no hace fallar la sesión si una descarga falla.
+- El hook se ejecuta solo en sesiones de Claude Code en la nube. En tu computadora, instala las skills con `npx skills add` o copiándolas.
+
+Para actualizar una skill de terceros, cambia su commit en el manifiesto después de revisar el contenido nuevo. Las licencias son las de cada repo de origen. `conjoint-design` y `conjoint-diagnostics` (scdenney) no declaran licencia, así que el hook las descarga para uso personal y no se copian a esta repo.
+
 ## Uso
 
 Escribe lo que necesitas con tus palabras, por ejemplo:

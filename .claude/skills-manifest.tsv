@@ -36,3 +36,9 @@ find-skills	vercel-labs/skills	57217cf86ba38148a57af9e90d14a4c049558330	skills/f
 brainstorming	obra/superpowers	22f0b463e7a5e579904dd6211a520321035526f7	skills/brainstorming
 scientific-critical-thinking	k-dense-ai/scientific-agent-skills	ec59a29a03d5c40f73ab40878df04860bc00e876	skills/scientific-critical-thinking
 critical-thinking-logical-reasoning	sammcj/agentic-coding	8c3806ba34feba1154b14d9b73d7f1f5bdc571f1	Skills/critical-thinking-logical-reasoning
+# Added 2026-11-26: five skills for writing voice, PDF quotes, citation checks and CEO-level advice. Pinned to the commit installed that day. SKILL.md read (scripts not run) for brand-voice, copywriting-tone-of-voice-creator, citation-verification and ceo-advisor. pdf is the official Anthropic skill (description read).
+brand-voice	affaan-m/ecc	4adeee6732a12d1540f49a4d50a38ce8c97f9a53	skills/brand-voice
+copywriting-tone-of-voice-creator	samber/cc-skills	50a33836b20f690c668af557bd9ef9d07a8c7ef2	skills/copywriting-tone-of-voice-creator
+pdf	anthropics/skills	e4bb5d960d87126ff3b3a8af1a104b7db67560ba	skills/pdf
+citation-verification	kalarislabs/research-agent-skills	a74b0dbe5fa865d73b9f250ba5b0c9f107bd1baa	skills/citation-verification
+ceo-advisor	alirezarezvani/claude-skills	ea7b5ab8da93bbba8880152d9ccb8c9979f12252	c-level-advisor/skills/ceo-advisor

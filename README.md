@@ -60,7 +60,7 @@ Instalación manual en Claude Code: copia `skills/easy-tone` a `~/.claude/skills
 Claude Code carga las skills de proyecto desde `.claude/skills/`. Esta repo lo resuelve así:
 
 - `.claude/skills/system-wbs`, `.claude/skills/marketing-master-system-wbs`, `.claude/skills/deep-research-wbs` y `.claude/skills/easy-tone` son enlaces simbólicos a `skills/`. Hay una sola copia de cada una.
-- `.claude/skills-manifest.tsv` lista 36 skills de terceros (las 29 de marketing que dependen de la master y las 7 que usa `system-wbs`: humanizer, no-ai-slop, scientific-critical-thinking, critical-thinking-logical-reasoning, brainstorming, find-skills y ux-writing). Cada fila fija el repo de origen y el commit revisado.
+- `.claude/skills-manifest.tsv` lista 41 skills de terceros: las 29 de marketing que dependen de la master, las 7 que usa `system-wbs` (humanizer, no-ai-slop, scientific-critical-thinking, critical-thinking-logical-reasoning, brainstorming, find-skills y ux-writing) y 5 de apoyo (brand-voice y copywriting-tone-of-voice-creator para voz de escritura, pdf y citation-verification para citas y PDFs, ceo-advisor para decisiones de nivel CEO). Cada fila fija el repo de origen y el commit revisado.
 - `.claude/hooks/session-start.sh`, registrado en `.claude/settings.json`, instala esas skills en `~/.claude/skills` al iniciar una sesión en la nube. Descarga solo la carpeta de cada skill en el commit fijado, omite la instalación si el manifiesto no cambió y no hace fallar la sesión si una descarga falla.
 - El hook se ejecuta solo en sesiones de Claude Code en la nube. En tu computadora, instala las skills con `npx skills add` o copiándolas.
 

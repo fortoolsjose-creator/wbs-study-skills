@@ -36,11 +36,30 @@ Instalación en Claude Code: copia `skills/system-wbs` a `~/.claude/skills/`. En
 
 Depende de 29 skills de terceros que no están en este repo. La lista con su origen y commit está en `skills/marketing-master-system-wbs/references/skill-map.md`. Instalación en Claude Code: copia `skills/marketing-master-system-wbs` a `~/.claude/skills/`. En claude.ai, sube `marketing-master-system-wbs.skill`.
 
+## easy-tone: explicaciones en lenguaje de 5.º grado
+
+`skills/easy-tone` reescribe texto de contabilidad denso (Kieso, Atrill y McLaney, apuntes de clase) en lenguaje simple, con ejemplos cotidianos y sin perder los términos oficiales ni los números. Nació de un análisis medido de tres bloques de Kieso (*Intermediate Accounting, IFRS Edition*, 4.ª ed.): Cap. 1 págs. 64-77, Cap. 2 págs. 121-149 y Cap. 3 págs. 217-247 (páginas del PDF). Ese texto tiene nivel universitario (Flesch-Kincaid 14, 19 palabras por oración, 27% de palabras largas). La skill apunta a nivel de 5.º grado, 12 palabras por oración y voz activa.
+
+- `references/kieso-voice-analysis.md`: perfil de voz de Kieso con cifras, qué lo hace difícil y cómo se traduce cada recurso.
+- `references/easy-tone-guide.md`: contrato de voz (atributos, léxico, palabras prohibidas, mecánica, plantillas de salida).
+- `references/rewrite-examples.md`: pares antes y después, con el ejemplo corrido de Mia's Lemonade Stand.
+- `scripts/check_easy.py`: verificador de longitud de oración, nivel de lectura, palabras prohibidas y oraciones de contraste.
+
+Se activa con frases como "explain this in 5th grade language", "easy tone" o "explícamelo fácil". Cada definición termina con una línea "In exam words" con la redacción cercana al libro.
+
+Verificador:
+
+```
+python3 -I skills/easy-tone/scripts/check_easy.py respuesta.txt
+```
+
+Instalación manual en Claude Code: copia `skills/easy-tone` a `~/.claude/skills/`.
+
 ## Usar las skills en chats nuevos conectados a esta repo
 
 Claude Code carga las skills de proyecto desde `.claude/skills/`. Esta repo lo resuelve así:
 
-- `.claude/skills/system-wbs`, `.claude/skills/marketing-master-system-wbs` y `.claude/skills/deep-research-wbs` son enlaces simbólicos a `skills/`. Hay una sola copia de cada una.
+- `.claude/skills/system-wbs`, `.claude/skills/marketing-master-system-wbs`, `.claude/skills/deep-research-wbs` y `.claude/skills/easy-tone` son enlaces simbólicos a `skills/`. Hay una sola copia de cada una.
 - `.claude/skills-manifest.tsv` lista 36 skills de terceros (las 29 de marketing que dependen de la master y las 7 que usa `system-wbs`: humanizer, no-ai-slop, scientific-critical-thinking, critical-thinking-logical-reasoning, brainstorming, find-skills y ux-writing). Cada fila fija el repo de origen y el commit revisado.
 - `.claude/hooks/session-start.sh`, registrado en `.claude/settings.json`, instala esas skills en `~/.claude/skills` al iniciar una sesión en la nube. Descarga solo la carpeta de cada skill en el commit fijado, omite la instalación si el manifiesto no cambió y no hace fallar la sesión si una descarga falla.
 - El hook se ejecuta solo en sesiones de Claude Code en la nube. En tu computadora, instala las skills con `npx skills add` o copiándolas.
